@@ -6,9 +6,13 @@ import HelloWorld from "@/components/HelloWorld.vue";
 <template>
   <!-- 一级路由出口组件 -->
   <RouterView />
+  <div class="test">miss</div>
 </template>
 
-<style scoped>
+<style scoped long="scss">
+.test {
+  color: $priceColor;
+}
 header {
   line-height: 1.5;
   max-height: 100vh;

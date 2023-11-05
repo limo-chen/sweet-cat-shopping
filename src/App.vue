@@ -9,7 +9,7 @@ import HelloWorld from "@/components/HelloWorld.vue";
   <div class="test">miss</div>
 </template>
 
-<style scoped long="scss">
+<style scoped lang="scss">
 .test {
   color: $priceColor;
 }

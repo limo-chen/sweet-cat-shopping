@@ -11,3 +11,5 @@ app.use(createPinia());
 app.use(router);
 
 app.mount("#app");
+
+Vue.config.devtools = true;

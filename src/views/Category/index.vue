@@ -4,14 +4,22 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { getBannerAPI } from "@/apis/home";
 import GoodsItem from "../Home/components/GoodsItem.vue";
+import { onBeforeRouteUpdate } from "vue-router";
 //获取初始数据
 const categoryData = ref({});
 const route = useRoute();
-const getCategory = async () => {
-  const res = await getCategoryAPI(route.params.id);
+//这里的id默认给route.params.id
+const getCategory = async (id = route.params.id) => {
+  const res = await getCategoryAPI(id);
   categoryData.value = res.result;
 };
-onMounted(() => getCategory());
+onMounted(() => getCategory()); //这里一开始没传，ok,用默认的route.params.id
+//路由参数变化的时候，把category数据接口重新发送
+//onBeforeRouteUpdate接受一个参数，为回调函数
+//由于上面的route.params.id拿到的是滞后的，加一个to
+onBeforeRouteUpdate((to) => {
+  getCategory(to.params.id); //如果这里传了参数，以这个为主，如果没传，以默认的为主
+});
 
 //获取banner
 const bannerList = ref([]);
@@ -19,7 +27,6 @@ const getBanner = async () => {
   const res = await getBannerAPI({
     distributionSite: "2",
   });
-  console.log(res);
   bannerList.value = res.result;
 };
 onMounted(() => getBanner());

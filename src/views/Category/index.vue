@@ -1,35 +1,11 @@
 <script setup>
-import { getCategoryAPI } from "@/apis/category";
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { getBannerAPI } from "@/apis/home";
 import GoodsItem from "../Home/components/GoodsItem.vue";
-import { onBeforeRouteUpdate } from "vue-router";
-//获取初始数据
-const categoryData = ref({});
-const route = useRoute();
-//这里的id默认给route.params.id
-const getCategory = async (id = route.params.id) => {
-  const res = await getCategoryAPI(id);
-  categoryData.value = res.result;
-};
-onMounted(() => getCategory()); //这里一开始没传，ok,用默认的route.params.id
-//路由参数变化的时候，把category数据接口重新发送
-//onBeforeRouteUpdate接受一个参数，为回调函数
-//由于上面的route.params.id拿到的是滞后的，加一个to
-onBeforeRouteUpdate((to) => {
-  getCategory(to.params.id); //如果这里传了参数，以这个为主，如果没传，以默认的为主
-});
-
-//获取banner
-const bannerList = ref([]);
-const getBanner = async () => {
-  const res = await getBannerAPI({
-    distributionSite: "2",
-  });
-  bannerList.value = res.result;
-};
-onMounted(() => getBanner());
+import { useBanner } from "./composables/useBanner";
+import { useCategory } from "./composables/useCategory";
+//把bannerList解构回来
+//在组件中调用函数把数据或者方法组合回来使用
+const { bannerList } = useBanner();
+const { categoryData } = useCategory();
 </script>
 
 <template>
@@ -56,7 +32,7 @@ onMounted(() => getBanner());
         <h3>全部分类</h3>
         <ul>
           <li v-for="i in categoryData.children" :key="i.id">
-            <RouterLink to="/">
+            <RouterLink :to="`/category/sub/${i.id}`">
               <img :src="i.picture" />
               <p>{{ i.name }}</p>
             </RouterLink>

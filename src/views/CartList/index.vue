@@ -1,7 +1,6 @@
 <script setup>
 import { useCartStore } from "@/stores/cartStore";
 const cartStore = useCartStore();
-
 const singleCheck = (i, selected) => {
   console.log(i, selected);
   //cartList是个数组，无法知道要修改谁的选中状态
@@ -9,6 +8,10 @@ const singleCheck = (i, selected) => {
   //i里面有我们的判断条件 selected里面有我们选中的状态
   //调起
   cartStore.singleCheck(i.skuId, selected);
+};
+
+const allCheck = (selected) => {
+  cartStore.allCheck(selected);
 };
 </script>
 
@@ -20,7 +23,10 @@ const singleCheck = (i, selected) => {
           <thead>
             <tr>
               <th width="120">
-                <el-checkbox />
+                <el-checkbox
+                  :model-value="cartStore.isAll"
+                  @change="allCheck"
+                />
               </th>
               <th width="400">商品信息</th>
               <th width="220">单价</th>

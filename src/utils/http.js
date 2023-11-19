@@ -1,7 +1,7 @@
 //axios做一些基础的封装
 import axios from "axios";
 import { ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore";
 import "element-plus/theme-chalk/el-message.css";
 import router from "@/router";
 //生成一个axios实例，用http来接收一下

@@ -1,18 +1,19 @@
 //封装购物车模块
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { useUserStore } from "./user";
-import { insetCartAIP, findNewCartListAPI } from "@/apis/cart";
+import { useUserStore } from "./userStore";
+import { insetCartAIP, findNewCartListAPI, deleteCartAPI } from "@/apis/cart";
 
 //第一个参数是模块名cart，第二是回调函数，编写state和action
 export const useCartStore = defineStore(
   "cart",
   () => {
     const userStore = useUserStore();
-    const isLogin = computed(() => userStore.useInfo.token);
+    const isLogin = computed(() => userStore.userInfo.token);
 
     //定义state，-cartList
     const cartList = ref([]);
+
     //定义操作cartList的方法-addCart
     const addCart = async (goods) => {
       const { skuId, count } = goods;
@@ -20,10 +21,7 @@ export const useCartStore = defineStore(
         //登录之后的加入购物车逻辑
         //1, 调用insetCartAIP
         await insetCartAIP({ skuId, count });
-        //2，获取最新的购物车列表
-        const res = await findNewCartListAPI();
-        //用获取到的最新的覆盖本地购物车列表
-        cartList.value = res.result;
+        getNewCartList();
       } else {
         //添加购物车操作
         //已添加过 count+1
@@ -39,13 +37,25 @@ export const useCartStore = defineStore(
         }
       }
     };
-
+    //获取最新购物车列表action
+    const getNewCartList = async () => {
+      //2，获取最新的购物车列表
+      const res = await findNewCartListAPI();
+      //用获取到的最新的覆盖本地购物车列表
+      cartList.value = res.result;
+    };
     //删除购物车
-    const delCart = (skuId) => {
-      //思路：1，找到要删除项的下标值-splice findIndex用来拿到下标值
-      //2，使用数组的过滤方法 -filter
-      const idx = cartList.value.findIndex((item) => skuId === item.skuId);
-      cartList.value.splice(idx, 1);
+    const delCart = async (skuId) => {
+      if (isLogin.value) {
+        //调用接口实现接口购物车的删除功能
+        await deleteCartAPI([skuId]);
+        getNewCartList();
+      } else {
+        //思路：1，找到要删除项的下标值-splice findIndex用来拿到下标值
+        //2，使用数组的过滤方法 -filter
+        const idx = cartList.value.findIndex((item) => skuId === item.skuId);
+        cartList.value.splice(idx, 1);
+      }
     };
 
     //单选功能

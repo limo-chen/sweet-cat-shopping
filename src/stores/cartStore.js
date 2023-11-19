@@ -59,7 +59,24 @@ export const useCartStore = defineStore(
     const allPrice = computed(() =>
       cartList.value.reduce((a, c) => a + c.count * c.price, 0)
     );
+
+    //3,已选择数量  先过滤再做累加运算 filter返回的依然是数组，还可以链式调用reduce
+    const selectedCount = computed(() =>
+      cartList.value
+        .filter((item) => item.selected)
+        .reduce((a, c) => a + c.count, 0)
+    );
+
+    //4，已选择商品加钱合计
+    const selectedPrice = computed(() =>
+      cartList.value
+        .filter((item) => item.selected)
+        .reduce((a, c) => a + c.count * c.price, 0)
+    );
+
     return {
+      selectedCount,
+      selectedPrice,
       cartList,
       addCart,
       delCart,

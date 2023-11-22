@@ -1,10 +1,10 @@
 //封装购物车相关接口
 import request from "@/utils/http";
 //加入购物车接口
-export const insetCartAIP = ({ skuId, count }) => {
+export const insertCartAPI = ({ skuId, count }) => {
   return request({
     url: "/member/cart",
-    methods: "POST",
+    method: "POST",
     data: { skuId, count },
   });
 };
@@ -19,9 +19,18 @@ export const findNewCartListAPI = () => {
 export const deleteCartAPI = (ids) => {
   return request({
     url: "/member/cart",
-    methods: "DELETE",
+    method: "DELETE",
     data: {
       ids,
     },
+  });
+};
+
+//合并购物车
+export const margeCartAPI = (data) => {
+  return request({
+    url: "/member/cart/merge",
+    method: "POST",
+    data,
   });
 };

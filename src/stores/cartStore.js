@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useUserStore } from "./userStore";
-import { insetCartAIP, findNewCartListAPI, deleteCartAPI } from "@/apis/cart";
+import { insertCartAPI, findNewCartListAPI, deleteCartAPI } from "@/apis/cart";
 
 //第一个参数是模块名cart，第二是回调函数，编写state和action
 export const useCartStore = defineStore(
@@ -20,8 +20,9 @@ export const useCartStore = defineStore(
       if (isLogin.value) {
         //登录之后的加入购物车逻辑
         //1, 调用insetCartAIP
-        await insetCartAIP({ skuId, count });
-        getNewCartList();
+        await insertCartAPI({ skuId, count });
+        const res = await findNewCartListAPI();
+        cartList.value = res.result;
       } else {
         //添加购物车操作
         //已添加过 count+1
@@ -117,6 +118,7 @@ export const useCartStore = defineStore(
       singleCheck,
       isAll,
       allCheck,
+      getNewCartList,
     };
   },
   {

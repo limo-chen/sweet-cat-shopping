@@ -20,4 +20,4 @@ app.use(router);
 app.use(componentPlugin);
 app.mount("#app");
 app.use(lazyPlugin);
-Vue.config.devtools = true;
+// Vue.config.devtools = true;

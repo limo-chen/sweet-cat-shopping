@@ -26,11 +26,17 @@ const getOrderList = async () => {
 };
 
 onMounted(() => getOrderList());
+//先修改赋值再调函数，getOrderList中的params.value是修改之后的，所以是最新的
+const tabChange = (type) => {
+  console.log(type);
+  params.value.orderState = type;
+  getOrderList();
+};
 </script>
 
 <template>
   <div class="order-container">
-    <el-tabs>
+    <el-tabs @tab-change="tabChange">
       <!-- tab切换 -->
       <el-tab-pane
         v-for="item in tabTypes"
